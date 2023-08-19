@@ -61,7 +61,7 @@ const prepareBudgetMessageItemWithLimit = (
 
 const fetchSpendingsPerCategory = async () => {
   const spendings = await fetchSpendings();
-  const spendingsPerCategory = spendings.reduce((acc, spending) => {
+  const spendingsPerCategory = spendings.reduce<Record<string, number>>((acc, spending) => {
     const { category, value } = spending;
     if (acc[category]) {
       acc[category] += value;
@@ -69,7 +69,7 @@ const fetchSpendingsPerCategory = async () => {
       acc[category] = value;
     }
     return acc;
-  }, {} as Record<string, number>);
+  }, {});
   return spendingsPerCategory;
 };
 
@@ -109,7 +109,7 @@ const fetchSpendings = async () => {
   return results.map((result) => {
     const { properties } = result as unknown as any;
     return {
-      category: properties.Categoria.multi_select[0].name,
+      category: properties.Categoria.select.name,
       value: properties.Valor.number
     };
   });
